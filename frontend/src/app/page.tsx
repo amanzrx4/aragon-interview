@@ -105,7 +105,7 @@ export default function Home() {
             <div className="brand-icon">
               <Icon icon="media" size={18} />
             </div>
-            <span className="brand-name">Aragon.ai</span>
+            <span className="brand-name">Aragon.ai Interview</span>
           </div>
 
           <div className="top-bar-divider" />
@@ -207,6 +207,17 @@ export default function Home() {
             title={`Full session ID: ${sessionId}`}>
             Session&nbsp;<strong suppressHydrationWarning>{sessionId.slice(0, 8).toUpperCase()}</strong>
           </span>
+          <Divider />
+          <a
+            href="https://github.com/amanzrx4/aragon-interview"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ fontSize: 11, opacity: 0.6, color: 'inherit', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px', transition: 'opacity 0.2s' }}
+            onMouseEnter={(e) => (e.currentTarget.style.opacity = '1')}
+            onMouseLeave={(e) => (e.currentTarget.style.opacity = '0.6')}
+          >
+            Built by Aman Sagar <Icon icon="link" size={10} />
+          </a>
         </div>
       </div>
 
