@@ -7,6 +7,9 @@ export function useImageUpload() {
   const [images, setImages] = useState<ImageItem[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  // Queue to prevent concurrent backend OOMs
+  const uploadQueue = useRef<Promise<void>>(Promise.resolve());
 
   // Session ID lives in a useRef so it is:
   //   - Stable across re-renders (ref doesn't change)
@@ -22,24 +25,8 @@ export function useImageUpload() {
   }, []);
 
   const processFile = useCallback(
-    async (file: File) => {
-      const id = uuidv4();
-      const previewUrl = URL.createObjectURL(file);
-
-      // 1. Instant frontend format check
+    async (id: string, file: File, previewUrl: string) => {
       const formatError = validateFormat(file);
-
-      const newItem: ImageItem = {
-        id,
-        file,
-        previewUrl,
-        status: 'loading',
-        validationProgress: 0,
-        currentStep: 'Checking format',
-        panel: 'accepted',
-      };
-
-      setImages((prev) => [...prev, newItem]);
 
       if (formatError) {
         await new Promise((r) => setTimeout(r, 300));
@@ -55,8 +42,11 @@ export function useImageUpload() {
 
       // 2. Call backend pipeline (upload + all 6 validations)
       try {
+        // Pseudo-item for validateImage
+        const itemForValidation = { id, file, previewUrl, status: 'loading' } as ImageItem;
+        
         const { passed, reason, imageUrl } = await validateImage(
-          newItem,
+          itemForValidation,
           sessionId,
           (progress: number, step: ValidationStep) => {
             updateImage(id, {
@@ -90,7 +80,25 @@ export function useImageUpload() {
 
   const addFiles = useCallback(
     (files: FileList | File[]) => {
-      Array.from(files).forEach((f) => processFile(f));
+      const newItems = Array.from(files).map((file) => ({
+        id: uuidv4(),
+        file,
+        previewUrl: URL.createObjectURL(file),
+        status: 'loading' as const,
+        validationProgress: 0,
+        currentStep: 'Queued',
+        panel: 'accepted' as const,
+      }));
+
+      // Add all to UI instantly
+      setImages((prev) => [...prev, ...newItems]);
+
+      // Queue network uploads sequentially to save backend memory
+      newItems.forEach((item) => {
+        uploadQueue.current = uploadQueue.current.then(async () => {
+          await processFile(item.id, item.file, item.previewUrl);
+        });
+      });
     },
     [processFile],
   );

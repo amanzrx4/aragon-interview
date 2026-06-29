@@ -3,8 +3,13 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import imageRoutes from './routes/image.routes';
 import { preloadFaceModel } from './services/face.service';
+import sharp from 'sharp';
 
 dotenv.config();
+
+// Extremely aggressive memory saving for free-tier Render instances
+sharp.cache(false); // Disable libvips caching so image buffers are freed immediately
+sharp.concurrency(1); // Process images one thread at a time to avoid memory spikes
 
 const app = express();
 const port = process.env.PORT || 3001;
