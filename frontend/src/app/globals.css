@@ -1,0 +1,804 @@
+@import "normalize.css";
+@import "@blueprintjs/core/lib/css/blueprint.css";
+@import "@blueprintjs/icons/lib/css/blueprint-icons.css";
+
+/* =====================================================
+   CSS CUSTOM PROPERTIES — THEME TOKENS
+   Dark theme (default):  [data-theme="dark"]  /  .bp5-dark
+   Light theme:           [data-theme="light"] /  html (no .bp5-dark)
+   ===================================================== */
+
+/* ------ DARK THEME ------ */
+:root,
+[data-theme="dark"] {
+  --bg-base:        #182026;
+  --bg-raised:      #202b33;
+  --bg-sunken:      #1a252c;
+  --bg-overlay:     #293742;
+  --border-default: #30404d;
+  --border-muted:   #394b59;
+
+  --text-primary:   #ffffff;
+  --text-secondary: #e1e8ed;
+  --text-muted:     #ced9e0;
+  --text-faint:     #a7b6c2;
+
+  --accent-blue:    #3b82f6;
+  --accent-blue-bg: rgba(59, 130, 246, 0.15);
+  --accent-blue-border: rgba(59, 130, 246, 0.35);
+
+  --intent-success:        #10b981;
+  --intent-success-bg:     rgba(16, 185, 129, 0.15);
+  --intent-success-border: rgba(16, 185, 129, 0.35);
+
+  --intent-danger:         #ef4444;
+  --intent-danger-bg:      rgba(239, 68, 68, 0.15);
+  --intent-danger-border:  rgba(239, 68, 68, 0.35);
+  --intent-danger-subtle:  rgba(239, 68, 68, 0.05);
+
+  --intent-warning:        #f59e0b;
+  --intent-warning-bg:     rgba(245, 158, 11, 0.15);
+
+  --card-shadow:    0 2px 4px rgba(0,0,0,.4), 0 4px 12px rgba(0,0,0,.3);
+  --card-hover-shadow: 0 4px 8px rgba(0,0,0,.5), 0 12px 28px rgba(0,0,0,.4);
+
+  --shimmer-a: #202b33;
+  --shimmer-b: #30404d;
+
+  --drop-overlay-bg: rgba(15, 23, 42, 0.94);
+  --drop-box-color:  #3b82f6;
+}
+
+/* ------ LIGHT THEME ------ */
+[data-theme="light"] {
+  --bg-base:        #f8fafc;
+  --bg-raised:      #ffffff;
+  --bg-sunken:      #f1f5f9;
+  --bg-overlay:     #e2e8f0;
+  --border-default: #cbd5e1;
+  --border-muted:   #94a3b8;
+
+  --text-primary:   #0f172a;
+  --text-secondary: #334155;
+  --text-muted:     #475569;
+  --text-faint:     #64748b;
+
+  --accent-blue:    #2563eb;
+  --accent-blue-bg: rgba(37, 99, 235, 0.08);
+  --accent-blue-border: rgba(37, 99, 235, 0.25);
+
+  --intent-success:        #059669;
+  --intent-success-bg:     rgba(5, 150, 105, 0.08);
+  --intent-success-border: rgba(5, 150, 105, 0.25);
+
+  --intent-danger:         #dc2626;
+  --intent-danger-bg:      rgba(220, 38, 38, 0.08);
+  --intent-danger-border:  rgba(220, 38, 38, 0.25);
+  --intent-danger-subtle:  rgba(220, 38, 38, 0.03);
+
+  --intent-warning:        #d97706;
+  --intent-warning-bg:     rgba(217, 119, 6, 0.08);
+
+  --card-shadow:    0 1px 3px rgba(0,0,0,.08), 0 4px 10px rgba(0,0,0,.04);
+  --card-hover-shadow: 0 4px 12px rgba(0,0,0,.12), 0 8px 24px rgba(0,0,0,.08);
+
+  --shimmer-a: #e2e8f0;
+  --shimmer-b: #cbd5e1;
+
+  --drop-overlay-bg: rgba(248, 250, 252, 0.94);
+  --drop-box-color:  #2563eb;
+}
+
+/* =====================================================
+   BASE RESET
+   ===================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+    "Oxygen", "Ubuntu", "Cantarell", "Open Sans", "Helvetica Neue",
+    sans-serif;
+  font-size: 16px; /* Scaled up overall body text */
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+/* =====================================================
+   APP SHELL
+   ===================================================== */
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background: var(--bg-base);
+}
+
+/* =====================================================
+   TOP BAR
+   ===================================================== */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px; /* Taller top bar */
+  padding: 0 24px;
+  background: var(--bg-raised);
+  border-bottom: 1px solid var(--border-default);
+  flex-shrink: 0;
+  z-index: 50;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.top-bar-left {
+  display: flex;
+  align-items: center;
+}
+
+.top-bar-divider {
+  width: 1px;
+  height: 28px;
+  background: var(--border-default);
+  margin: 0 18px;
+  flex-shrink: 0;
+}
+
+.brand-mark {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-icon {
+  width: 34px;
+  height: 34px;
+  background: var(--accent-blue);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #ffffff;
+}
+
+.brand-name {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: 0.1px;
+}
+
+.page-title {
+  font-size: 15px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.top-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* Theme toggle button */
+.theme-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 6px;
+  border: 1px solid var(--border-default);
+  background: var(--bg-sunken);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  outline: none;
+  padding: 0;
+}
+
+.theme-toggle-btn:hover {
+  background: var(--bg-overlay);
+  border-color: var(--border-muted);
+  color: var(--text-primary);
+}
+
+/* ---- Metric chips ---- */
+.metric-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 6px;
+  background: var(--bg-overlay);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-muted);
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+  transition: background 0.2s ease;
+}
+
+.metric-tag .metric-val {
+  font-weight: 700;
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+.metric-tag.warn    .metric-val { color: var(--intent-warning); }
+.metric-tag.success .metric-val { color: var(--intent-success); }
+.metric-tag.danger  .metric-val { color: var(--intent-danger); }
+
+/* =====================================================
+   STATUS BAR
+   ===================================================== */
+.status-bar {
+  display: flex;
+  align-items: center;
+  height: 40px; /* Taller status bar */
+  padding: 0 24px;
+  background: var(--bg-sunken);
+  border-bottom: 1px solid var(--border-default);
+  flex-shrink: 0;
+  overflow: hidden;
+  transition: background 0.2s ease;
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-right: 20px;
+  margin-right: 20px;
+  border-right: 1px solid var(--border-default);
+  font-size: 13px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.status-item:last-child {
+  border-right: none;
+}
+
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.status-indicator.idle       { background: var(--text-faint); }
+.status-indicator.processing { background: var(--intent-warning); animation: blinkIndicator 1s ease-in-out infinite; }
+.status-indicator.done       { background: var(--intent-success); }
+
+@keyframes blinkIndicator {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+
+.status-label { color: var(--text-muted); }
+.status-value { color: var(--text-primary); font-weight: 600; }
+.status-bar-spacer { flex: 1; }
+
+.status-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* =====================================================
+   CONTENT + PANELS
+   ===================================================== */
+.content-area {
+  position: relative;
+}
+
+.panel {
+  /* Layout driven by inline styles in page.tsx */
+  transition: width 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.panel-accepted { width: 100%; }
+.panel-accepted.split { 
+  /* width controlled inline by react state */
+}
+
+.panel-rejected {
+  width: 0%;
+  overflow: hidden;
+  border-left: 0px solid var(--border-default);
+  transition: border-left-width 0s linear 0.55s;
+}
+
+.panel-rejected.visible {
+  /* width controlled inline by react state */
+  border-left: 1px solid var(--border-default);
+  transition: border-left-width 0s linear 0s;
+}
+
+/* ---- Panel Resizer (Draggable) ---- */
+.panel-resizer {
+  width: 6px;
+  cursor: col-resize;
+  background: transparent;
+  z-index: 10;
+  position: relative;
+  transition: background 0.2s ease;
+  flex-shrink: 0;
+}
+
+.panel-resizer:hover,
+.panel-resizer.active {
+  background: var(--accent-blue);
+}
+
+/* ---- Panel Header ---- */
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 48px; /* Taller panel header */
+  padding: 0 20px;
+  background: var(--bg-raised);
+  border-bottom: 1px solid var(--border-default);
+  flex-shrink: 0;
+  transition: background 0.2s ease;
+}
+
+.panel-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.panel-section-label {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
+.panel-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  background: var(--bg-overlay);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-muted);
+}
+
+.panel-badge.success {
+  background: var(--intent-success-bg);
+  color: var(--intent-success);
+  border-color: var(--intent-success-border);
+}
+
+.panel-badge.danger {
+  background: var(--intent-danger-bg);
+  color: var(--intent-danger);
+  border-color: var(--intent-danger-border);
+}
+
+.panel-header-right { display: flex; align-items: center; gap: 10px; }
+
+.panel-hint {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* ---- Acceptance criteria pills (shown in panel header) ---- */
+.criteria-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.criteria-tag {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: var(--bg-overlay);
+  border: 1px solid var(--border-default);
+  border-radius: 4px;
+  padding: 2px 8px;
+  letter-spacing: 0.15px;
+  white-space: nowrap;
+}
+
+/* =====================================================
+   IMAGE GRID
+   ===================================================== */
+.image-grid {
+  /* No flex needed — the parent panel grid's 1fr row constrains height */
+  overflow-y: auto;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+  align-content: start;
+  background: var(--bg-base);
+  transition: background 0.2s ease;
+
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-muted) var(--bg-sunken);
+}
+
+.image-grid::-webkit-scrollbar { width: 8px; }
+.image-grid::-webkit-scrollbar-track {
+  background: var(--bg-sunken);
+}
+.image-grid::-webkit-scrollbar-thumb {
+  background: var(--border-muted);
+  border-radius: 8px;
+  border: 2px solid var(--bg-sunken);
+}
+.image-grid::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+.rejected-panel-grid { background: var(--intent-danger-subtle); }
+
+/* =====================================================
+   IMAGE CARD
+   ===================================================== */
+.image-card {
+  position: relative;
+  background: var(--bg-raised);
+  border: 1px solid var(--border-default);
+  border-radius: 6px;
+  overflow: hidden;
+  cursor: default;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.2s ease;
+  animation: cardIn 0.3s ease both;
+  box-shadow: var(--card-shadow);
+}
+
+.image-card:hover {
+  border-color: var(--border-muted);
+  box-shadow: var(--card-hover-shadow);
+}
+
+.image-card.accepted  { border-color: var(--intent-success-border); }
+.image-card.rejected  { border-color: var(--intent-danger-border); animation: cardIn 0.3s ease both, rejectFlash 0.6s ease forwards; }
+.image-card.processing { border-color: var(--accent-blue-border); }
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes rejectFlash {
+  0%   { background: var(--bg-raised); }
+  30%  { background: var(--intent-danger-bg); }
+  100% { background: var(--bg-raised); }
+}
+
+/* ---- Thumbnail ---- */
+.image-thumb-wrap {
+  position: relative;
+  width: 100%;
+  padding-bottom: 82%;
+  overflow: hidden;
+  background: var(--bg-base);
+}
+
+.image-thumb {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: opacity 0.35s ease, filter 0.35s ease;
+}
+
+.image-thumb.dim { opacity: 0.25; filter: grayscale(0.3); }
+
+.image-skeleton {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, var(--shimmer-a) 25%, var(--shimmer-b) 50%, var(--shimmer-a) 75%);
+  background-size: 200% 100%;
+  animation: bpShimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes bpShimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ---- Corner chip ---- */
+.thumb-status-chip {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 4px;
+  animation: chipPop 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+.thumb-status-chip.accepted { background: #059669; color: #ffffff; }
+.thumb-status-chip.rejected { background: #dc2626; color: #ffffff; }
+
+[data-theme="dark"] .thumb-status-chip.accepted { background: #10b981; color: #ffffff; }
+[data-theme="dark"] .thumb-status-chip.rejected { background: #ef4444; color: #ffffff; }
+
+@keyframes chipPop {
+  from { opacity: 0; transform: scale(0.7) translateY(-4px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* ---- Spinner ring ---- */
+.processing-ring {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 22px;
+  height: 22px;
+  border: 3px solid var(--accent-blue-bg);
+  border-top-color: var(--accent-blue);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ---- Card Info ---- */
+.card-info {
+  padding: 12px 14px;
+  background: var(--bg-sunken);
+  border-top: 1px solid var(--border-default);
+  transition: background 0.2s ease;
+}
+
+.card-filename {
+  font-size: 13px; /* Bigger filename */
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: "SF Mono", "Roboto Mono", "Fira Code", monospace;
+  margin-bottom: 8px;
+}
+
+/* ---- Progress bar ---- */
+.bp-progress-track {
+  height: 6px; /* Taller progress bar */
+  background: var(--border-default);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.bp-progress-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s ease, background-color 0.4s ease;
+}
+
+.bp-progress-fill.processing {
+  background: var(--accent-blue);
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent, transparent 6px,
+    rgba(255,255,255,0.15) 6px, rgba(255,255,255,0.15) 12px
+  );
+  background-size: 28px 28px;
+  animation: stripeMove 0.6s linear infinite;
+}
+
+@keyframes stripeMove {
+  from { background-position: 0 0; }
+  to   { background-position: 28px 0; }
+}
+
+.bp-progress-fill.accepted { background: var(--intent-success); }
+.bp-progress-fill.rejected { background: var(--intent-danger); }
+
+/* ---- Status row ---- */
+.card-status-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+.card-status-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 3px;
+}
+
+.card-status-tag.processing {
+  background: var(--accent-blue-bg);
+  color: var(--accent-blue);
+  border: 1px solid var(--accent-blue-border);
+}
+
+.card-status-tag.accepted {
+  background: var(--intent-success-bg);
+  color: var(--intent-success);
+  border: 1px solid var(--intent-success-border);
+}
+
+.card-status-tag.rejected {
+  background: var(--intent-danger-bg);
+  color: var(--intent-danger);
+  border: 1px solid var(--intent-danger-border);
+}
+
+.card-step-label {
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100px;
+  text-align: right;
+}
+
+/* ---- Reject reason ---- */
+.card-reject-reason {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--intent-danger);
+  line-height: 1.4;
+  padding: 6px 8px;
+  background: var(--intent-danger-bg);
+  border-left: 3px solid var(--intent-danger);
+  border-radius: 0 4px 4px 0;
+}
+
+/* =====================================================
+   HUGE EMPTY STATE / DROPZONE IN CENTER
+   ===================================================== */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* height: 100% not needed — parent grid 1fr row already constrains height */
+  min-height: 300px;
+  gap: 20px;
+  text-align: center;
+  padding: 60px 20px;
+  background: var(--bg-base);
+  transition: background 0.2s ease;
+}
+
+.empty-state-card {
+  width: 100%;
+  max-width: 560px;
+  padding: 48px 36px;
+  border: 2px dashed var(--accent-blue-border);
+  border-radius: 12px;
+  background: var(--bg-raised);
+  box-shadow: var(--card-hover-shadow);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.empty-state-card:hover {
+  border-color: var(--accent-blue);
+  transform: translateY(-2px);
+}
+
+.empty-state-icon-wrap {
+  width: 80px;
+  height: 80px;
+  border-radius: 16px;
+  background: var(--accent-blue-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-blue);
+}
+
+.empty-state-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.empty-state-desc {
+  font-size: 15px;
+  color: var(--text-secondary);
+  max-width: 380px;
+  line-height: 1.6;
+}
+
+/* HUGE Browse Files Button */
+.huge-browse-btn {
+  margin-top: 8px;
+}
+
+/* =====================================================
+   DROP OVERLAY
+   ===================================================== */
+.drop-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--drop-overlay-bg);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeOverlay 0.12s ease;
+}
+
+.drop-box {
+  width: 440px;
+  height: 280px;
+  border: 3px dashed var(--drop-box-color);
+  border-radius: 12px;
+  background: var(--accent-blue-bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  color: var(--accent-blue);
+  font-size: 18px;
+  font-weight: 700;
+  animation: dropIn 0.2s cubic-bezier(0.34, 1.3, 0.64, 1);
+}
+
+.drop-box-sub {
+  font-size: 14px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+@keyframes fadeOverlay { from { opacity: 0; } to { opacity: 1; } }
+@keyframes dropIn {
+  from { transform: scale(0.94); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
